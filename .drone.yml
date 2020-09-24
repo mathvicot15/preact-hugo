@@ -22,7 +22,7 @@ steps:
           link_names: true
           template: >
               {{#success build.status}}
-                build {{build.number}} succeeded. Good job. <@Mathieu Vicot >
+                build {{build.number}} succeeded. Good job. @Mathieu Vicot
               {{else}}
-                build {{build.number}} failed. Fix me please. <@drone-ci> <@someone>
+                build {{build.number}} failed. Fix me please. @drone-ci @someone
               {{/success}}
