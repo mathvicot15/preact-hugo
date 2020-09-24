@@ -1,0 +1,9 @@
+---
+kind: pipeline
+name: pipeline-ci-test
+
+steps:
+  - name: helloworld
+    image: busybox:latest
+    commands:
+      - echo 'helloworld'
