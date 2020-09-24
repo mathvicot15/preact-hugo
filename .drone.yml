@@ -3,26 +3,39 @@ kind: pipeline
 name: pipeline-ci-test
 
 steps:
-    - name: helloworld
-      image: busybox:latest
-      commands:
-          - echo 'helloworld'
+  - name: helloworld
+    image: busybox:latest
+    commands:
+      - echo 'helloworld'
 
-    - name: preact cli
-      image: lowess/preact-cli
-      commands:
-          - npm install
+  - name: preact cli
+    image: lowess/preact-cli
+    commands:
+      - export BASE_URL=https://${DRONE_REPO_OWNER}.github.io/preact-hugo
+      - preact create ${DRONE_REPO}#${DRONE_COMMIT} app
+      - cd app
+      - npm install
+      - npm run build
 
-    - name: slack
-      image: plugins/slack
-      settings:
-          webhook:
-              from_secret: slack_webhook
-          channel: drone-ci
-          link_names: true
-          template: >
-              {{#success build.status}}
-                build {{build.number}} réussi . Un cookie pour @Mathieu Vicot
-              {{else}}
-                Echec du build {{build.number}} aled 
-              {{/success}}
+  - name: slack
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook
+      channel: drone-ci
+      link_names: true
+      template: >
+        {{#success build.status}}
+          build {{build.number}} réussi . Un cookie pour @Mathieu Vicot
+        {{else}}
+          Echec du build {{build.number}} aled 
+        {{/success}}
+
+  - name: publish
+    image: plugins/gh-pages
+    settings:
+      username:
+        from_secret: github_username
+      password:
+        from_secret: github_password
+      pages_directory: app/dist/
