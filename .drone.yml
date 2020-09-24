@@ -12,12 +12,13 @@ steps:
       image: lowess/preact-cli
       commands:
           - npm install
+          - npm run build
 
     - name: slack
       image: plugins/slack
       settings:
           webhook:
-              secrets: [slack_webhook]
+              from_secret: slack_webhook
           channel: drone-ci
           link_names: true
           template: >
