@@ -12,7 +12,6 @@ steps:
       image: lowess/preact-cli
       commands:
           - npm install
-          - npm run build
 
     - name: slack
       image: plugins/slack
