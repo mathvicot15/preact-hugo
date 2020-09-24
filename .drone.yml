@@ -3,7 +3,25 @@ kind: pipeline
 name: pipeline-ci-test
 
 steps:
-  - name: helloworld
-    image: busybox:latest
-    commands:
-      - echo 'helloworld'
+    - name: helloworld
+      image: busybox:latest
+      commands:
+          - echo 'helloworld'
+
+    - name: preact cli
+      image: lowess/preact-cli
+      commands:
+          - npm install
+
+    - name: slack
+      image: plugins/slack
+      settings:
+          webhook: https://hooks.slack.com/services/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
+          channel: drone-ci
+          link_names: true
+          template: >
+              {{#success build.status}}
+                build {{build.number}} succeeded. Good job. <@Mathieu Vicot >
+              {{else}}
+                build {{build.number}} failed. Fix me please. <@drone-ci> <@someone>
+              {{/success}}
